@@ -166,7 +166,18 @@ void play(Player arr[5]) {
 
 void results(Player arr[5]) {
     std::cout << "\nResults of the game" << std::endl;
-    // Print the results sorted by score
+    // Print the results sorted by score ascending
+    int n = 5;
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            // Compare scores and swap if needed
+            if (arr[j].score < arr[j + 1].score) {
+                Player temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
     for (int i = 0; i < 5; i++) {
         std::cout << arr[i].name << " " << arr[i].score << std::endl;
     }
@@ -176,7 +187,8 @@ void results(Player arr[5]) {
 // Main Function
 int main() {
     Player arr[5];
-    arr[0] = Player("Jorge", 20, "asdasd@");
+    // Tests instances of Player class
+    /*arr[0] = Player("Jorge", 20, "asdasd@");
     arr[0].playerCards();
     arr[1] = Player("Alejandro", 18, "dofgjd@");
     arr[1].playerCards();
@@ -185,8 +197,9 @@ int main() {
     arr[3] = Player("Johitan Jue", 18, "dofgjd@");
     arr[3].playerCards();
     arr[4] = Player("Cheto", 18, "dofgjd@");
-    arr[4].playerCards();
-    /*for (int i = 0; i < 5; i++) {
+    arr[4].playerCards();*/
+
+    for (int i = 0; i < 5; i++) {
         std::string name;
         int age;
         std::string mail;
@@ -198,7 +211,7 @@ int main() {
         std::cin >> mail;
         arr[i] = Player(name, age, mail);
         arr[i].playerCards();
-    }*/
+    }
     play(arr);
     results(arr);
 
