@@ -17,7 +17,6 @@ public:
     symbol = "";
     value = 0;
   }
-
   Card(string symbol, int value) {
     this->symbol = symbol;
     this->value = value;
@@ -27,28 +26,38 @@ public:
     return os;
   }
 };
-
 // Card Deck
 
-Card allCards[56] = {
-    Card("♣", 1),  Card("♣", 2),  Card("♣", 3),  Card("♣", 4),  Card("♣", 5),
-    Card("♣", 6),  Card("♣", 7),  Card("♣", 8),  Card("♣", 9),  Card("♣", 10),
-    Card("♣", 11), Card("♣", 12), Card("♣", 13), Card("♣", 14), Card("♦", 1),
-    Card("♦", 2),  Card("♦", 3),  Card("♦", 4),  Card("♦", 5),  Card("♦", 6),
-    Card("♦", 7),  Card("♦", 8),  Card("♦", 9),  Card("♦", 10), Card("♦", 11),
-    Card("♦", 12), Card("♦", 13), Card("♦", 14), Card("♥", 1),  Card("♥", 2),
-    Card("♥", 3),  Card("♥", 4),  Card("♥", 5),  Card("♥", 6),  Card("♥", 7),
-    Card("♥", 8),  Card("♥", 9),  Card("♥", 10), Card("♥", 11), Card("♥", 12),
-    Card("♥", 13), Card("♥", 14), Card("♠", 1),  Card("♠", 2),  Card("♠", 3),
-    Card("♠", 4),  Card("♠", 5),  Card("♠", 6),  Card("♠", 7),  Card("♠", 8),
-    Card("♠", 9),  Card("♠", 10), Card("♠", 11), Card("♠", 12), Card("♠", 13),
-    Card("♠", 14)};
+void setCards(Card *cards) { // Esta funcion crea las 52 cartas del juego y las guarda en el arreglo cards
+  string valueCard[13] = {"1", "2", "3",  "4", "5", "6", "7",
+                          "8", "9", "10", "J", "Q", "K"};
+  string simbolCard[4] = {"♣", "♥", "♦", "♠"};
+  for (int i = 0; i < 52; i++) {
+    cards[i].symbol = simbolCard[i / 13];
+    cards[i].value = i % 13 + 1;
+  }
+}
+/* Card allCards[56] = { */
+/*     Card("♣", 1),  Card("♣", 2),  Card("♣", 3),  Card("♣", 4),  Card("♣", 5), */
+/*     Card("♣", 6),  Card("♣", 7),  Card("♣", 8),  Card("♣", 9),  Card("♣", 10), */
+/*     Card("♣", 11), Card("♣", 12), Card("♣", 13), Card("♣", 14), Card("♦", 1), */
+/*     Card("♦", 2),  Card("♦", 3),  Card("♦", 4),  Card("♦", 5),  Card("♦", 6), */
+/*     Card("♦", 7),  Card("♦", 8),  Card("♦", 9),  Card("♦", 10), Card("♦", 11), */
+/*     Card("♦", 12), Card("♦", 13), Card("♦", 14), Card("♥", 1),  Card("♥", 2), */
+/*     Card("♥", 3),  Card("♥", 4),  Card("♥", 5),  Card("♥", 6),  Card("♥", 7), */
+/*     Card("♥", 8),  Card("♥", 9),  Card("♥", 10), Card("♥", 11), Card("♥", 12), */
+/*     Card("♥", 13), Card("♥", 14), Card("♠", 1),  Card("♠", 2),  Card("♠", 3), */
+/*     Card("♠", 4),  Card("♠", 5),  Card("♠", 6),  Card("♠", 7),  Card("♠", 8), */
+/*     Card("♠", 9),  Card("♠", 10), Card("♠", 11), Card("♠", 12), Card("♠", 13), */
+/*     Card("♠", 14)}; */
 
 // End of Card Deck
 
 // Prototypes
 int randomNumber();
 void showCards();
+int randomNumber();
+int randomBigMaze();
 
 // End of Prototypes
 class Player {
@@ -78,19 +87,40 @@ public:
   }
 
   // Methods
-  void playerCards() {
-    for (int i = 0; i < 10; i++) {
-      int random = randomNumber();
-      if (allCards[random].isUsed == false) {
-        cards[i] = allCards[random];
-        allCards[random].isUsed = true;
-      } else {
-        i--;
-      }
+  void printMaze() {
+    for (int i = 0; i < 10; i++) { // Imprime el mazo del jugador
+      std::cout << cards[i] << " ";
     }
-    std::cout << "Cards of " << name << std::endl;
-    showCards();
   }
+  void ObtenerMazo(Card *cards) {
+    // Esta funcion obtiene un mazo de 10 cartas aleatorias y las guarda en el
+    // atributo maze
+    for (int i = 0; i < 10; i++) {
+      int random = randomBigMaze();
+      while (cards[random].isUsed) {
+        random = randomBigMaze();
+      }
+      cards[random].isUsed = true;
+      this->cards[i] = cards[random];
+    }
+    std::cout << "Mazo del jugador: " << this->name << std::endl;
+    std::cout << "\n";
+    this->printMaze();
+    std::cout << "\n";
+  }
+  /* void playerCards() { */
+  /*   for (int i = 0; i < 10; i++) { */
+  /*     int random = randomNumber(); */
+  /*     if (allCards[random].isUsed == false) { */
+  /*       cards[i] = allCards[random]; */
+  /*       allCards[random].isUsed = true; */
+  /*     } else { */
+  /*       i--; */
+  /*     } */
+  /*   } */
+    /* std::cout << "Cards of " << this->name << std::endl; */
+    /* showCards(); */
+  /* } */
 
   void showCards() {
     for (int i = 0; i < 10; i++) {
@@ -268,9 +298,11 @@ void figure() {
 
 // Main Function
 int main() {
+  Card *cards = new Card[52];
   Player arr[5];
+  setCards(cards);
   // Tests instances of Player class
-  /*arr[0] = Player("Jorge", 20, "asdasd@");
+  arr[0] = Player("Jorge", 20, "asdasd@");
   arr[0].playerCards();
   arr[1] = Player("Alejandro", 18, "dofgjd@");
   arr[1].playerCards();
@@ -279,20 +311,20 @@ int main() {
   arr[3] = Player("Johitan Jue", 18, "dofgjd@");
   arr[3].playerCards();
   arr[4] = Player("Cheto", 18, "dofgjd@");
-  arr[4].playerCards();*/
-  for (int i = 0; i < 5; i++) {
-    std::string name;
-    int age;
-    std::string mail;
-    std::cout << "Enter the name of the player " << i + 1 << std::endl;
-    std::cin >> name;
-    std::cout << "Enter the age of the player " << i + 1 << std::endl;
-    std::cin >> age;
-    std::cout << "Enter the mail of the player " << i + 1 << std::endl;
-    std::cin >> mail;
-    arr[i] = Player(name, age, mail);
-    arr[i].playerCards();
-  }
+  arr[4].playerCards();
+  /* for (int i = 0; i < 5; i++) { */
+  /*   std::string name; */
+  /*   int age; */
+  /*   std::string mail; */
+  /*   std::cout << "Enter the name of the player " << i + 1 << std::endl; */
+  /*   std::cin >> name; */
+  /*   std::cout << "Enter the age of the player " << i + 1 << std::endl; */
+  /*   std::cin >> age; */
+  /*   std::cout << "Enter the mail of the player " << i + 1 << std::endl; */
+  /*   std::cin >> mail; */
+  /*   arr[i] = Player(name, age, mail); */
+  /*   arr[i].playerCards(); */
+  /* } */
   play(arr);
   results(arr);
   std::cout << "Thanks for playing" << std::endl;
