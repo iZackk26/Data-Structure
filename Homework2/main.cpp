@@ -61,6 +61,36 @@ void fillArray2D(int arr[10][8], int arr2[10]) {
         }
     }
 }
+int stringIteration(string something, Array arr[]) {
+    int count = 0;
+    for (int i = 0; i < something.length(); i++) {
+        for (int j = 0; j < 8; j++) {
+            if (something[i] == arr[j].name){
+                arr[j].incrementCount();
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
+void biggestString(string arr[2][2], Array arr2[]) {
+    int biggest = 0;
+    int row = 0;
+    int column = 0;
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2 ; j++) {
+            int temp = stringIteration(arr[i][j], arr2);
+            if (temp > biggest) {
+                biggest = temp;
+                row = i;
+                column = j;
+            }
+        }
+    }
+    std::cout << "The biggest string is: " << arr[row][column] << std::endl;
+}
+
 
 void fillArrayStrings(string arr[2][2]) {
     for (int i = 0; i < 2; i++) {
@@ -107,9 +137,9 @@ void printArray(int arr[10][8]) {
     std::cout << std::endl;
 }
 void printArray(string arr[2][2]) {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 2; i++) {
         std::cout << arr[i][0] << " ";
-        for (int j = 1; j < 8; j++) {
+        for (int j = 1; j < 2; j++) {
             std::cout << arr[i][j] << " ";
         }
     }
@@ -118,14 +148,13 @@ void printArray(string arr[2][2]) {
 
 // End of Overloaded Functions
 
-
 int main() {
     bool running = true;
     while (running) {
         std::cout << "\n";
         std::cout << "Welcome to the Assigment 2" << std::endl;
         std::cout << "Enter the option that you want to run: " << std::endl;
-        std::cout << "1.Ints and Randoms 2.Chars and Strings 3.Exit" << std::endl;
+        std::cout << "1.Ints and Randoms\n2.Chars and Strings\n3.Exit" << std::endl;
         int option;
         std::cin >> option;
         switch (option) {
@@ -142,9 +171,9 @@ int main() {
                 inputOfCharacters(secondArray);
                 setArray(arr, secondArray);
                 printArray(arr);
-                std::cout << std::endl;
                 fillArrayStrings(fourthArray);
                 printArray(fourthArray);
+                biggestString(fourthArray, arr);
                 break;
             }
             case 3: {
